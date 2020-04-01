@@ -1,0 +1,24 @@
+﻿@model CollectionApp.ViewModels.EditViewModel
+@{
+
+    ViewBag.Title = "Edit Collection";
+
+}
+<form asp-action="Edit" asp-controller="Collections" asp-route-id="@Model.Id" enctype="multipart/form-data">
+    <div class="form-group">
+        <label asp-for="CollectionName">CollectionName</label>
+        <input type="text" asp-for="CollectionName" />
+        <span asp-validation-for="CollectionName"></span>
+    </div>
+    <div>
+        <label asp-for="NewImage"></label><br />
+        <input type="file" asp-for="NewImage" />
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Save" class="btn btn-default" />
+    </div>
+</form>
+@if (Model.Image != null)
+{
+    <img style='width:400px; height:300px;' src="data:image/jpeg;base64,@(Convert.ToBase64String(Model.Image))" />
+}

@@ -1,0 +1,42 @@
+﻿@model CollectionApp.ViewModels.CollectionViewModel
+@{
+    ViewBag.Title = "Collection";
+}
+<script language="JavaScript">
+    function toggle(source) {
+        var checkboxes = document.querySelectorAll('input[type="checkbox"][name="Id"]');
+        for (var i = 0; i < checkboxes.length; i++) {
+            if (checkboxes[i] != source)
+                checkboxes[i].checked = source.checked;
+        }
+    }
+</script>
+<input type="checkbox" onClick="toggle(this)" /> Check all?
+<br />
+<form asp-controller="Collections" asp-action="FunctionsItem" method="post">
+    <input type="submit" name="Delete" value="Delete" />
+    <table class="table">
+        <tr><td>Check</td><td>Id</td><td>Item Name</td><td>Likes</td><td></td></tr>
+        @foreach (var item in Model.Items)
+        {
+            if (item.CollectionId == Model.CollectionId)
+            {
+    <tr>
+        <td><input type="checkbox" name="Id" value="@item.Id" /></td>
+        <td>@item.Id</td>
+        <td><a asp-action="Item" asp-controller="Collections" asp-route-id="@item.Id">@item.ItemName</a></td>
+        <td>@item.Likes</td>
+        <td><a asp-controller="Collections" asp-route-id="@item.Id" asp-action="EditItem">Edit Item</a></td>
+        <td>
+            @if (item.Image != null)
+            {
+                <img style='width:80px; height:60px;' src="data:image/jpeg;base64,@(Convert.ToBase64String(item.Image))" />
+            }
+        </td>
+
+    </tr>
+            }
+        }
+    </table>
+</form>
+    <a asp-controller="Collections" asp-route-id="@Model.CollectionId" asp-action="AddItem">Add Item</a>

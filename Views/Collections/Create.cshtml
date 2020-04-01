@@ -1,0 +1,29 @@
+﻿@model CollectionApp.ViewModels.CreateViewModel
+@{
+    ViewBag.Title = "Add collection";
+}
+<form method="post" asp-controller="Collections" asp-action="Create" enctype="multipart/form-data">
+    <div asp-validation-summary="ModelOnly"></div>
+    <div>
+        <label asp-for="CollectionName"></label><br />
+        <input asp-for="CollectionName" />
+        <span asp-validation-for="CollectionName"></span>
+    </div>
+    <div>
+        <label asp-for="Image"></label><br />
+        <input type="file" asp-for="Image" />
+    </div>
+    <div>
+        <input type="hidden" asp-for="UserName" value="@Model.UserName" />
+    </div>
+    <div>
+        <input type="hidden" asp-for="CreationDate" value="@Model.CreationDate" />
+    </div>
+    <div>
+        <input type="hidden" asp-for="Likes" value="@Model.Likes" />
+    </div>
+
+    <div>
+        <input type="submit" value="Create" />
+    </div>
+</form>

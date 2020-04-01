@@ -1,0 +1,30 @@
+﻿@model CollectionApp.ViewModels.AddItemViewModel
+@{
+    ViewBag.Title = "Add item";
+}
+    <form method="post" asp-controller="Collections" asp-action="AddItem" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly"></div>
+        <div>
+            <label asp-for="ItemName"></label><br />
+            <input asp-for="ItemName" />
+            <span asp-validation-for="ItemName"></span>
+        </div>
+        <div>
+            <label asp-for="Image"></label><br />
+            <input type="file" asp-for="Image" />
+        </div>
+        <div>
+            <input type="hidden" asp-for="CollectionId" value="@Model.CollectionId" />
+        </div>
+
+        <div>
+            <input type="hidden" asp-for="Likes" value="@Model.Likes" />
+        </div>
+
+        <div>
+            <input type="hidden" asp-for="UserName" value="@Model.UserName" />
+        </div>
+        <div>
+            <input type="submit" value="Add" />
+        </div>
+    </form>

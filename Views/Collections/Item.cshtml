@@ -1,0 +1,26 @@
+﻿@model CollectionApp.ViewModels.ItemViewModel
+@using CollectionApp.Models
+<h2>@Model.Item.ItemName</h2>
+
+@foreach (var comment in Model.ItemComments)
+{
+    @if (comment.ItemId == Model.Item.Id)
+    {
+        <p>@comment.UserName : @comment.Text</p>
+    }
+}
+<ul id="messagesList"></ul>
+
+<form method="post" asp-controller="Collections" asp-action="Comment">
+
+    <div>
+        <label asp-for="Comment.Text"></label><br />
+        <input type="text" asp-for="Comment.Text" id="messageInput" />
+    </div>
+
+    <input type="hidden" name="Id" value="@Model.Item.Id" id="ItemId"/>
+    <input type="hidden" name="Id" value="@User.Identity.Name" id="userInput"/>
+    <input type="submit" value="Leave Comment" name="CommentButton" id="CommentButton"/>
+</form>
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
+<script src="~/js/chat.js"></script>
