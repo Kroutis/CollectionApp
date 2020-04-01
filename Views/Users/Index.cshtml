@@ -1,0 +1,43 @@
+﻿@model IEnumerable<CollectionApp.Models.User>
+@{
+    ViewBag.Title = "User List";
+}
+<script language="JavaScript">
+    function toggle(source) {
+        var checkboxes = document.querySelectorAll('input[type="checkbox"][name="Id"]');
+        for (var i = 0; i < checkboxes.length; i++) {
+            if (checkboxes[i] != source)
+                checkboxes[i].checked = source.checked;
+        }
+    }
+</script>
+<input type="checkbox" onClick="toggle(this)" /> Check all?
+<br />
+
+<form asp-controller="Users" asp-action="Functions" method="post">
+    <input type="submit" name="Delete" value="Delete" />
+    <input type="submit" name="Block" value="Block" />
+    <input type="submit" name="Unblock" value="Unblock" />
+    <input type="submit" name="ChangeRole" value="Change Role" />
+
+    <table class="table">
+        <tr><th>Check</th><th>Role</th><th>UserName</th><th>Email</th><th>RegisterDate</th><th>LoginDate</th><th>Status</th><th>Block</th><th></th></tr>
+        @foreach (var user in Model)
+        {
+
+            <tr>
+                <td><input type="checkbox" name="Id" value="@user.Id" /></td>
+
+                <td>@user.Role</td>
+                <td><a class="nav-link text-dark" asp-controller="Profile" asp-action="" asp-route-username="@user.UserName">@user.UserName</a></td>
+                <td>@user.Email</td>
+                <td>@user.RegisterDate</td>
+                <td>@user.LoginDate</td>
+                <td>@user.Status</td>
+                <td>@user.Block</td>
+
+            </tr>
+        }
+
+    </table>
+</form>

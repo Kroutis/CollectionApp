@@ -1,0 +1,21 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model CollectionApp.ViewModels.ProfileControllerViewModel
+@if (User.Identity.Name == Model.UserName || Model.Role_2 == "admin" || Model.Role_2 == "moderator")
+{
+    <h2>@Model.UserId</h2>
+    <br />
+    <h2>@Model.UserEmail</h2>
+    <br />
+}
+<h2>@Model.UserName</h2>
+<br />
+<h2>@Model.RegisterDate</h2>
+<br />
+<h2>@Model.LoginDate</h2>
+<br />
+<h2>@Model.Status</h2>
+<br />
+<h2>@Model.Role</h2>
+<br />
+<a class="nav-link text-dark" asp-controller="Collections" asp-action="" asp-route-username="@Model.UserName" asp-route-sortOrder="IdAsc">@Model.UserName Collections</a>
+

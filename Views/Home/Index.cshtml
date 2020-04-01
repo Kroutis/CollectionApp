@@ -1,0 +1,26 @@
+﻿@model IEnumerable<CollectionApp.Models.User>
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
+@if (User.Identity.IsAuthenticated)
+{
+    <a class="nav-link text-dark" asp-controller="Users" asp-action="" >Users</a>
+
+    <a class="nav-link text-dark" asp-controller="Profile" asp-action="" asp-route-username="@User.Identity.Name">@User.Identity.Name</a>
+
+    <form method="post" asp-controller="Account" asp-action="Logout">
+        <input type="submit" value="Logout" />
+    </form>
+    <br />
+
+}
+else
+{
+    <a asp-controller="Account" asp-action="Login">Login</a>
+    <a asp-controller="Account" asp-action="Register">Register</a>
+}
