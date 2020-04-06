@@ -1,26 +1,188 @@
 ﻿@model CollectionApp.ViewModels.ItemViewModel
 @using CollectionApp.Models
-<h2>@Model.Item.ItemName</h2>
-
-@foreach (var comment in Model.ItemComments)
-{
-    @if (comment.ItemId == Model.Item.Id)
-    {
-        <p>@comment.UserName : @comment.Text</p>
-    }
+@{
+    ViewBag.Title = Model.Item.ItemName;
 }
-<ul id="messagesList"></ul>
+<head>
 
-<form method="post" asp-controller="Collections" asp-action="Comment">
+    <style>
 
-    <div>
-        <label asp-for="Comment.Text"></label><br />
-        <input type="text" asp-for="Comment.Text" id="messageInput" />
-    </div>
+        * {
+            box-sizing: border-box;
+        }
 
-    <input type="hidden" name="Id" value="@Model.Item.Id" id="ItemId"/>
-    <input type="hidden" name="Id" value="@User.Identity.Name" id="userInput"/>
-    <input type="submit" value="Leave Comment" name="CommentButton" id="CommentButton"/>
-</form>
-<script src="~/js/signalr/dist/browser/signalr.js"></script>
-<script src="~/js/chat.js"></script>
+        h2 {
+            font-family: "Times New Roman", Times, sans-serif;
+            font-size: 35px;
+            color: black;
+            margin-left: 5px;
+        }
+        h1 {
+            font-family: "Times New Roman", Times, sans-serif;
+            font-size: 20px;
+            color: black;
+            margin-left: 5px;
+        }
+        h1, a {
+            font-family: "Times New Roman", Times, sans-serif;
+            font-size: 20px;
+            color: black;
+            margin-left: 5px;
+            text-decoration:none;
+        }
+
+        p.description {
+            width: 500px;
+            height: auto;
+            font-family: "Times New Roman", Times, sans-serif;
+            font-size: 17px;
+            border: 1px solid black;
+            box-shadow: 1px 1px 1px grey;
+            word-wrap: break-word;
+            padding: 5px;
+            margin-left: 5px;
+            background-color:azure;
+            border-radius:5px;
+        }
+
+        a.add {
+            font-family: "Times New Roman", Times, sans-serif;
+            font-size: 17px;
+            background-color: darkgreen;
+            color: white;
+            padding: 6px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            float: left;
+            margin-right: 5px;
+            margin-top: 5px;
+            margin-left: 5px;
+            margin-bottom: 5px;
+            position: relative;
+            text-decoration: none;
+        }
+
+            a.add:hover {
+                background-color: forestgreen;
+            }
+            img {
+                height:300px;
+                width:auto;
+                margin-left:5px;
+            }
+
+            .col-75 {
+            float: left;
+            width: 100%;
+            margin-top: 6px;
+        }
+
+            textarea.desc {
+                box-shadow: 1px 1px 1px grey;
+                width: 600px;
+                height: 90px;
+                font-family: "Times New Roman", Times, sans-serif;
+                font-size: 17px;
+                padding: 12px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                resize: vertical;
+                margin-left:5px;
+            }
+
+            .row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+
+            input[type=submit][class=add] {
+            font-family: "Times New Roman", Times, sans-serif;
+            font-size: 17px;
+            background-color: darkgreen;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            float: left;
+            margin-right: 5px;
+            margin-top: 5px;
+            margin-bottom: 5px;
+            position: relative;
+            margin-left:5px;
+        }
+
+            input[type=submit][class=add]:hover {
+                background-color: forestgreen;
+            }
+
+            span {
+            font-family: "Times New Roman", Times, sans-serif;
+            font-size: 17px;
+            color: red;
+        }
+
+            p.comment {
+                box-shadow: 1px 1px 1px black;
+                width: 600px;
+                height: auto;
+                font-family: "Times New Roman", Times, sans-serif;
+                font-size: 17px;
+                padding: 12px;
+                border: 1px solid #727272;
+                border-radius: 4px;
+                resize: vertical;
+                margin-left:5px;
+                margin-top:-10px;
+                background-color:lightblue;
+                word-wrap: break-word;
+            }
+    </style>
+
+</head>
+<body>
+    <h2>@Model.Item.ItemName</h2>
+
+    @if (Model.Item.Image != null)
+    {
+        <img src="data:image/jpeg;base64,@(Convert.ToBase64String(Model.Item.Image))" />
+    }
+    <h1>Description</h1>
+    <p class="description">@Model.Item.Text</p>
+
+    @if (User.Identity.Name == Model.UserName || Model.Role_2 == "admin" || Model.Role_2 == "moderator")
+    {
+        <a class="add" asp-controller="Collections" asp-action="EditItem" asp-route-id=@Model.Item.Id>Edit</a>
+    }
+
+    @if (User.Identity.IsAuthenticated)
+    {
+        <form asp-controller="Collections" asp-action="Comment" method="post">
+
+            <div class="row">
+                <div class="col-75">
+                    <textarea class="desc" asp-for="Text"></textarea>
+                    <span asp-validation-for="Text"></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <input type="submit" class="add" name="CommentButton" value="Leave comment">
+            </div>
+            <input type="hidden" name="Id" value=@Model.Item.Id />
+
+        </form>
+    }
+    @foreach (var comment in Model.ItemComments)
+    {
+        if (comment.ItemId == Model.Item.Id)
+        {
+            <h1><a asp-controller="Collections" asp-action="Index" asp-route-username="@comment.UserName">@comment.UserName:</a></h1>
+            <p class="comment">@comment.Text</p>
+        }
+
+    }
+</body>

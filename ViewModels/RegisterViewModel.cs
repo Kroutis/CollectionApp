@@ -14,20 +14,21 @@ namespace CollectionApp.ViewModels
         public string Email { get; set; }
 
         [Required]
-        [Display(Name = "UserName")]
+        [Display(Name = "Username")]
+        [StringLength(20, ErrorMessage = "Username must have a minimum of 3 or a maximum of 20 characters", MinimumLength = 3)]
         [DataType(DataType.Text)]
         public string UserName { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
-        [StringLength(100, ErrorMessage = "Поле {0} должно иметь минимум {2} и максимум {1} символов.", MinimumLength = 5)]
+        [StringLength(20, ErrorMessage = "Password must have a minimum of 5 or a maximum of 20 characters", MinimumLength = 5)]
         [Display(Name = "Password")]
         public string Password { get; set; }
 
         [Required]
         [Compare("Password", ErrorMessage = "Passwords do not match")]
         [DataType(DataType.Password)]
-        [Display(Name = "Confirm Password")]
+        [Display(Name = "Confirm password")]
         public string PasswordConfirm { get; set; }
         [Required]
         [DataType(DataType.Text)]

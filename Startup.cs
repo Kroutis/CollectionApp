@@ -11,7 +11,8 @@ using Microsoft.Extensions.Hosting;
 using CollectionApp.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using SignalRChat.Hubs;
+using Microsoft.EntityFrameworkCore.Design;
+
 
 namespace CollectionApp
 {
@@ -41,7 +42,7 @@ namespace CollectionApp
 
             })
     .AddEntityFrameworkStores<ApplicationContext>();
-            services.AddSignalR();
+            
             services.AddControllersWithViews();
         }
 
@@ -59,7 +60,7 @@ namespace CollectionApp
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapHub<ChatHub>("/chatHub");
+                
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");

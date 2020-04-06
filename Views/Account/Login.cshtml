@@ -1,21 +1,149 @@
 ﻿@model CollectionApp.ViewModels.LoginViewModel
+@{ 
+    ViewBag.Title = "Login";
+}
+<head>
 
-<h2>Log into app</h2>
-<form method="post" asp-controller="Account" asp-action="Login"
-      asp-route-returnUrl="@Model.ReturnUrl">
-    <div asp-validation-summary="ModelOnly"></div>
-    <div>
-        <label asp-for="UserName"></label><br />
-        <input asp-for="UserName" />
-        <span asp-validation-for="UserName"></span>
-    </div>
-    <div>
-        <label asp-for="Password"></label><br />
-        <input asp-for="Password" />
-        <span asp-validation-for="Password"></span>
-    </div>
+    <style>
+* {
+  box-sizing: border-box;
+}
 
-    <div>
-        <input type="submit" value="Login" />
+        input[type=text], select, textarea {
+            box-shadow: 1px 1px 1px black;
+            width: 300px;
+            font-family: "Times New Roman", Times, sans-serif;
+            font-size: 17px;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            resize: vertical;
+        }
+        input[type=password], select, textarea {
+            box-shadow: 1px 1px 1px black;
+            font-family: "Times New Roman", Times, sans-serif;
+            font-size: 17px;
+            width: 300px;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            resize: vertical;
+        }
+
+        label {
+            padding: 0;
+            display: inline-block;
+        }
+
+        input[type=submit] {
+            
+            font-family: "Times New Roman", Times, sans-serif;
+            font-size: 17px;
+            background-color: darkgreen;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            float: right;
+            margin-right: 5px;
+            margin-top: 5px;
+            margin-bottom: 5px;
+            position: relative;
+        }
+
+input[type=submit]:hover {
+  background-color: forestgreen;
+}
+
+        div.loginform {
+            height: auto;
+            width: 320px;
+            border-radius: 10px;
+            background-color: lightgrey;
+            padding-left: 6.5px;
+            padding-right: 10px;
+            margin-left: auto;
+            margin-right: auto;
+            border: 2px solid black;
+        }
+
+        .col-25 {
+            float: left;
+            width: auto;
+            margin-top: 6px;
+        }
+
+        .col-75 {
+            float: left;
+            width: 100%;
+            margin-top: 6px;
+        }
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+label {
+    font-family: "Times New Roman", Times, sans-serif;
+                font-size: 17px;
+}
+span {
+    font-family: "Times New Roman", Times, sans-serif;
+                font-size: 17px;
+                color:red;
+                
+}
+h2 {
+font-family: "Times New Roman", Times, sans-serif;
+                font-size: 20px;
+                text-align:center;
+                margin-bottom:5px;
+}
+        ul {
+            font-family: "Times New Roman", Times, sans-serif;
+            font-size: 17px;
+            color: red;
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+    </style>
+
+</head>
+<body>
+    <h2>Log into the app</h2>
+    <div class="loginform">
+        <form method="post" asp-controller="Account" asp-action="Login">
+
+            <div asp-validation-summary="ModelOnly"></div>
+
+            <div class="row">
+                <div class="col-25">
+                    <label asp-for="Username">Username</label>
+                </div>
+                <div class="col-75">
+                    <input type="text" asp-for="Username" />
+                    <span asp-validation-for="Username"></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-25">
+                    <label asp-for="Password">Password</label>
+                </div>
+                <div class="col-75">
+                    <input type="password" asp-for="Password" />
+                    <span asp-validation-for="Password"></span>
+                </div>
+            </div>
+            <div class="row">
+                <input type="submit" value="Log in">
+            </div>
+        </form>
     </div>
-</form>
+</body>

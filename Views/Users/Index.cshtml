@@ -1,43 +1,180 @@
-﻿@model IEnumerable<CollectionApp.Models.User>
+﻿@model CollectionApp.ViewModels.UsersViewModel
+
 @{
-    ViewBag.Title = "User List";
+    ViewBag.Title = "Users";
 }
-<script language="JavaScript">
-    function toggle(source) {
-        var checkboxes = document.querySelectorAll('input[type="checkbox"][name="Id"]');
-        for (var i = 0; i < checkboxes.length; i++) {
-            if (checkboxes[i] != source)
-                checkboxes[i].checked = source.checked;
+    <script language="JavaScript">
+        function toggle(source) {
+            var checkboxes = document.querySelectorAll('input[type="checkbox"][name="Id"]');
+            for (var i = 0; i < checkboxes.length; i++) {
+                if (checkboxes[i] != source)
+                    checkboxes[i].checked = source.checked;
+            }
         }
-    }
-</script>
-<input type="checkbox" onClick="toggle(this)" /> Check all?
-<br />
+    </script>
+    <head>
+        <script src="https://kit.fontawesome.com/1d70ce51d1.js"></script>
+        <style>
+            #users {
+                font-family: "Times New Roman", Times, sans-serif;
+                font-size: 17px;
+                border-collapse: collapse;
+                width: auto;
+                margin-left: 5px;
+            }
 
-<form asp-controller="Users" asp-action="Functions" method="post">
-    <input type="submit" name="Delete" value="Delete" />
-    <input type="submit" name="Block" value="Block" />
-    <input type="submit" name="Unblock" value="Unblock" />
-    <input type="submit" name="ChangeRole" value="Change Role" />
+                #users td, #users th {
+                    border: 1px solid white;
+                    padding: 8px;
+                    text-align: center;
+                }
 
-    <table class="table">
-        <tr><th>Check</th><th>Role</th><th>UserName</th><th>Email</th><th>RegisterDate</th><th>LoginDate</th><th>Status</th><th>Block</th><th></th></tr>
-        @foreach (var user in Model)
+                #users tr {
+                    background-color: forestgreen;
+                    color: white
+                }
+
+                    #users tr:hover {
+                        background-color: black;
+                        color: white;
+                    }
+
+                #users th {
+                    font-family: "Times New Roman", Times, sans-serif;
+                    font-size: 18px;
+                    padding-top: 12px;
+                    padding-bottom: 12px;
+                    text-align: left;
+                    background-color: darkgreen;
+                    color: white;
+                    text-align: center;
+                }
+
+            ol.buttons {
+                list-style-type: none;
+                margin: 0;
+                padding: 0;
+                overflow: hidden;
+                background-color: none;
+            }
+
+            input {
+                font-family: "Times New Roman", Times, sans-serif;
+                font-size: 17px;
+                border: 1px solid black;
+                padding: 4px 7px;
+                margin: 4px 6px;
+                background-color: lightgrey;
+                cursor: pointer;
+            }
+
+                input.check {
+                    vertical-align: top;
+                    cursor: auto;
+                }
+
+                input.button:hover {
+                    background-color: red;
+                    color: white;
+                }
+
+            #users a.td {
+                text-decoration: none;
+                color: white;
+            }
+
+                #users a.td:visited {
+                    color: white;
+                }
+
+                #users a.th {
+                text-decoration: none;
+                color: white;
+            }
+
+                #users a.th:visited {
+                    color: white;
+                }
+        </style>
+    </head>
+
+<body>
+    <br />
+    <form asp-controller="Users" asp-action="Functions" method="post">
+        @if (Model.Role == "admin" || Model.Role == "moderator")
         {
-
-            <tr>
-                <td><input type="checkbox" name="Id" value="@user.Id" /></td>
-
-                <td>@user.Role</td>
-                <td><a class="nav-link text-dark" asp-controller="Profile" asp-action="" asp-route-username="@user.UserName">@user.UserName</a></td>
-                <td>@user.Email</td>
-                <td>@user.RegisterDate</td>
-                <td>@user.LoginDate</td>
-                <td>@user.Status</td>
-                <td>@user.Block</td>
-
-            </tr>
+            <ol class="buttons">
+                <li><input class="check" type="checkbox" onClick="toggle(this)" />Check/Uncheck all</li>
+            </ol>
+            <ol class="buttons">
+                <li>
+                    <input class="button" type="submit" name="Delete" value="Delete" />
+                </li>
+                <li>
+                    <input class="button" type="submit" name="Block" value="Block" />
+                </li>
+                <li>
+                    <input class="button" type="submit" name="Unblock" value="Unblock" />
+                </li>
+                <li>
+                    <input class="button" type="submit" name="ChangeRole" value="Change Role" />
+                </li>
+            </ol>
         }
+        <table id="users">
+            <tr>
+                @if (Model.Role == "admin" || Model.Role == "moderator")
+                {
+                    <th>Check</th>
+                }
+                <th>Username<a class="th" asp-action="Index" asp-controller="Users" asp-route-sortOrder="@ViewBag.NameSort"><i class="fas fa-sort"></i></a></th>
+                <th>Role<a class="th" asp-action="Index" asp-controller="Users" asp-route-sortOrder="@ViewBag.RoleSort"><i class="fas fa-sort"></i></a></th>
+                @if (Model.Role == "admin" || Model.Role == "moderator")
+                {
+                    <th>Email</th>
+                }
+                <th>Status<a class="th" asp-action="Index" asp-controller="Users" asp-route-sortOrder="@ViewBag.StatusSort"><i class="fas fa-sort"></i></a></th>
 
-    </table>
-</form>
+                @if (Model.Role == "admin" || Model.Role == "moderator")
+                {
+                    <th>Block Status<a class="th" asp-action="Index" asp-controller="Users" asp-route-sortOrder="@ViewBag.BlockSort"><i class="fas fa-sort"></i></a></th>
+                }
+            </tr>
+            @foreach (var user in Model.Users)
+            {
+                @if (user.Block != "true" && Model.Role != "admin" && Model.Role != "moderator")
+                {
+                    <tr>
+                        <td><a class="td" asp-controller="Collections" asp-action="" asp-route-username="@user.UserName">@user.UserName</a></td>
+                        <td>@user.Role</td>
+                        <td>@user.Status</td>
+
+
+                    </tr>
+                }
+                else if (Model.Role == "admin" || Model.Role == "moderator")
+                {
+                    <tr>
+                        @if (user.Role != "admin")
+                        {
+                            <td><input class="check" type="checkbox" name="Id" value="@user.Id" /></td>
+                        }
+                        else
+                        {
+                            <td></td>
+                        }
+                        <td><a class="td" asp-controller="Collections" asp-action="" asp-route-username="@user.UserName">@user.UserName</a></td>
+                        <td>@user.Role</td>
+                        <td>@user.Email</td>
+                        <td>@user.Status</td>
+                        <td>@user.Block</td>
+
+                    </tr>
+                }
+
+
+            }
+
+        </table>
+    </form>
+</body>

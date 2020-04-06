@@ -2,29 +2,170 @@
 @{
     ViewBag.Title = "Add item";
 }
-    <form method="post" asp-controller="Collections" asp-action="AddItem" enctype="multipart/form-data">
-        <div asp-validation-summary="ModelOnly"></div>
-        <div>
-            <label asp-for="ItemName"></label><br />
-            <input asp-for="ItemName" />
-            <span asp-validation-for="ItemName"></span>
-        </div>
-        <div>
-            <label asp-for="Image"></label><br />
-            <input type="file" asp-for="Image" />
-        </div>
-        <div>
-            <input type="hidden" asp-for="CollectionId" value="@Model.CollectionId" />
-        </div>
+    <head>
 
-        <div>
-            <input type="hidden" asp-for="Likes" value="@Model.Likes" />
-        </div>
+        <style>
+            * {
+  box-sizing: border-box;
+}
 
-        <div>
-            <input type="hidden" asp-for="UserName" value="@Model.UserName" />
-        </div>
-        <div>
-            <input type="submit" value="Add" />
-        </div>
-    </form>
+            input[type=text], select, textarea {
+                width: 500px;
+                box-shadow: 1px 1px 1px grey;
+                font-family: "Times New Roman", Times, sans-serif;
+                font-size: 17px;
+                padding: 12px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                resize: vertical;
+            }
+
+
+                textarea.desc {
+                    box-shadow: 1px 1px 1px grey;
+                    width: 500px;
+                    height: 225px;
+                    font-family: "Times New Roman", Times, sans-serif;
+                    font-size: 17px;
+                    padding: 12px;
+                    border: 1px solid #ccc;
+                    border-radius: 4px;
+                    resize: vertical;
+                }
+
+            label {
+                padding: 0;
+                display: inline-block;
+            }
+
+            input[type=submit][class=add] {
+                
+                font-family: "Times New Roman", Times, sans-serif;
+                font-size: 17px;
+                background-color: darkgreen;
+                color: white;
+                padding: 8px 16px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                float: left;
+                margin-right: 5px;
+                margin-top: 5px;
+                margin-bottom: 5px;
+                position: relative;
+            }
+        input[type=submit][class=add]:hover {
+  background-color: forestgreen;
+}
+
+            input[type=file] {
+                font-family: "Times New Roman", Times, sans-serif;
+                font-size: 17px;
+               
+                
+                
+                float: left;
+                margin-right: 5px;
+                margin-top: 5px;
+                margin-bottom: 5px;
+                position: relative;
+            }
+
+            input[type=file]:hover {
+  
+}
+
+            .col-25 {
+                float: left;
+                width: auto;
+                margin-top: 6px;
+            }
+
+        .col-75 {
+            float: left;
+            width: 100%;
+            margin-top: 6px;
+        }
+        
+        .row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+label {
+    font-family: "Times New Roman", Times, sans-serif;
+                font-size: 17px;
+}
+span {
+    font-family: "Times New Roman", Times, sans-serif;
+                font-size: 17px;
+                color:red;
+                
+}
+h2 {
+font-family: "Times New Roman", Times, sans-serif;
+                font-size: 20px;
+                text-align:left;
+                margin-bottom:5px;
+}
+
+        </style>
+
+    </head>
+    <body>
+        <h2>Add a new item</h2>
+        <form method="post" asp-controller="Collections" asp-action="AddItem" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly"></div>
+
+            <div class="row">
+                <div class="col-25">
+                    <label asp-for="ItemName">Item name</label>
+                </div>
+                <div class="col-75">
+                    <input type="text" asp-for="ItemName" />
+                    <span asp-validation-for="ItemName"></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-25">
+                    <label asp-for="Text">Description</label>
+                </div>
+                <div class="col-75">
+                    <textarea class="desc" asp-for="Text"></textarea>
+                    <span asp-validation-for="Text"></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <label asp-for="Image">Image</label>
+                <div class="col-75">
+                    <input type="file" asp-for="Image" />
+                </div>
+            </div>
+
+
+
+
+
+            <div>
+                <input type="hidden" asp-for="CollectionId" value="@Model.CollectionId" />
+            </div>
+
+            <div>
+                <input type="hidden" asp-for="Likes" value="@Model.Likes" />
+            </div>
+
+            <div>
+                <input type="hidden" asp-for="UserName" value="@Model.UserName" />
+            </div>
+
+
+
+            <div class="row">
+                <input type="submit" class="add" value="Add">
+            </div>
+
+        </form>
+
+    </body>

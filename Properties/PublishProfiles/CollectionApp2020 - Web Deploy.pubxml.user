@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+This file is used by the publish/package process of your Web project. You can customize the behavior of this process
+by editing this MSBuild file. In order to learn more about this please visit https://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAmFlALmQ7zUqu26u2twV7SgAAAAACAAAAAAAQZgAAAAEAACAAAAAkPj7HgdZWF+23WTHE9fFg08pRL3CtMBRRsSMHAKLRrgAAAAAOgAAAAAIAACAAAAD0PNYjyrrjydq0BPuvqmiVk8DmVeQ8CxP0STqVsPpw5YAAAACdfjQtxf/8pMTf3UemRrhhIedZHZEm+Uolliq0egV1qn12ROTXZRZLn8ASDNM2NCWiVrjs9tWLdJsK+zFscesWoKFIUP2KL7XPmurgJzOHkByU/FS0iLyryiz/nUl1uP9n+X95MDffmXEqT1DynNGF79J+iIj1i/05zEla5vhFDkAAAADbmErifmq6FHrXErxQ4BywHqdqsEX19acvWOf+VqFGNwO76LRAaiGZjojTLo7WUdpZ0MlzXXZw2LZe7oUcTbJk</EncryptedPassword>
+  </PropertyGroup>
+  <ItemGroup>
+    <DestinationConnectionStrings Include="DefaultConnection">
+      <Value>Server=%28localdb%29\mssqllocaldb%3bDatabase=usersstoredb%3bTrusted_Connection=True%3b</Value>
+    </DestinationConnectionStrings>
+  </ItemGroup>
+</Project>

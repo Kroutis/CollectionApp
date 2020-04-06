@@ -1,29 +1,161 @@
 ﻿@model CollectionApp.ViewModels.RegisterViewModel
-<h2>New User Registration</h2>
-<form method="post" asp-controller="Account" asp-action="Register">
-    <div asp-validation-summary="ModelOnly"></div>
-    <div>
-        <label asp-for="Email"></label><br />
-        <input asp-for="Email" />
-        <span asp-validation-for="Email"></span>
-    </div>
-    <div>
-        <label asp-for="UserName"></label><br />
-        <input asp-for="UserName" />
-        <span asp-validation-for="UserName"></span>
-    </div>
-    <div>
-        <label asp-for="Password"></label><br />
-        <input asp-for="Password" />
-        <span asp-validation-for="Password"></span>
-    </div>
-    <div>
-        <label asp-for="PasswordConfirm"></label><br />
-        <input asp-for="PasswordConfirm" />
-        <span asp-validation-for="PasswordConfirm"></span>
+@{
+    ViewBag.Title="Register";
+}
+
+    <head>
+
+        <style>
+            * {
+                box-sizing: border-box;
+            }
+
+            input[type=text], select, textarea {
+                box-shadow: 1px 1px 1px black;
+                width: 300px;
+                font-family: "Times New Roman", Times, sans-serif;
+                font-size: 17px;
+                padding: 12px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                resize: vertical;
+            }
+
+            input[type=password], select, textarea {
+                box-shadow: 1px 1px 1px black;
+                font-family: "Times New Roman", Times, sans-serif;
+                font-size: 17px;
+                width: 300px;
+                padding: 12px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                resize: vertical;
+            }
+
+            label {
+                padding: 0;
+                display: inline-block;
+            }
+
+            input[type=submit] {
+                font-family: "Times New Roman", Times, sans-serif;
+                font-size: 17px;
+                background-color: darkgreen;
+                color: white;
+                padding: 8px 16px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                float: right;
+                margin-right: 5px;
+                margin-top: 5px;
+                margin-bottom: 5px;
+                position: relative;
+            }
+
+                input[type=submit]:hover {
+                    background-color: forestgreen;
+                }
+
+            div.regform {
+                height: auto;
+                width: 320px;
+                border-radius: 10px;
+                background-color: lightgrey;
+                padding-left: 6.5px;
+                padding-right: 10px;
+                margin-left: auto;
+                margin-right: auto;
+                border: 2px solid black;
+            }
+
+            .col-25 {
+                float: left;
+                width: auto;
+                margin-top: 6px;
+            }
+
+            .col-75 {
+                float: left;
+                width: 100%;
+                margin-top: 6px;
+            }
+
+            /* Clear floats after the columns */
+            .row:after {
+                content: "";
+                display: table;
+                clear: both;
+            }
+
+            label {
+                font-family: "Times New Roman", Times, sans-serif;
+                font-size: 17px;
+            }
+
+            span {
+                font-family: "Times New Roman", Times, sans-serif;
+                font-size: 17px;
+                color: red;
+            }
+
+            h2 {
+                font-family: "Times New Roman", Times, sans-serif;
+                font-size: 20px;
+                text-align: center;
+                margin-bottom: 5px;
+            }
+        </style>
+
+    </head>
+<body>
+    <h2>Create a new user</h2>
+
+    <div class="regform">
+        <form method="post" asp-controller="Account" asp-action="Register">
+            <div asp-validation-summary="ModelOnly"></div>
+            <div class="row">
+                <div class="col-25">
+                    <label asp-for="Email">Email</label>
+                </div>
+                <div class="col-75">
+                    <input type="text" asp-for="Email" />
+                    <span asp-validation-for="Email"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-25">
+                    <label asp-for="UserName">Username</label>
+                </div>
+                <div class="col-75">
+                    <input type="text" asp-for="UserName" />
+                    <span asp-validation-for="UserName"></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-25">
+                    <label asp-for="Password">Password</label>
+                </div>
+                <div class="col-75">
+                    <input type="password" asp-for="Password" />
+                    <span asp-validation-for="Password"></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-25">
+                    <label asp-for="PasswordConfirm">Confirm password</label>
+                </div>
+                <div class="col-75">
+                    <input type="password" asp-for="PasswordConfirm" />
+                    <span asp-validation-for="PasswordConfirm"></span>
+                </div>
+            </div>
+            <div class="row">
+                <input type="submit" value="Register" />
+            </div>
+        </form>
     </div>
 
-    <div>
-        <input type="submit" value="Register" />
-    </div>
-</form>
+</body>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+This file is used by the publish/package process of your Web project. You can customize the behavior of this process
+by editing this MSBuild file. In order to learn more about this please visit https://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAmFlALmQ7zUqu26u2twV7SgAAAAACAAAAAAAQZgAAAAEAACAAAAAvhM12CBOC9uN8BKTR0ksA1PM3lCZ9Q/lRR4WtU1awVwAAAAAOgAAAAAIAACAAAAD6VphxSJFcMJjRKGEAvVb9u1kf9+P116ndFYXUn1oITIAAAACxQxv9UX9kJz8Guc8sO5dS4jagkBP9+i950TA4Caqn4t8rLIfpMFXA04uhngGd8XLanHatrih9o8+B0unUMvRQO8Ec8dLucHzV8z5P94uo/aPbG9N4HRrj7oQLMbdo1/DDuD83D5dabjbCJhHBML32iLzvUh1M/EuUU1X5A/Get0AAAAC8AiquRXZ++b7IZ67wGMJo13gjaVov6R11U+sFLOv3Fpd6Ab2WrFs/LWMpcz62k7+llznRVYqkq0QHVre4PKBz</EncryptedPassword>
+  </PropertyGroup>
+  <ItemGroup>
+    <DestinationConnectionStrings Include="DefaultConnection">
+      <Value>Data Source=tcp:collectionapp2020dbserverpepehands.database.windows.net,1433%3bInitial Catalog=CollectionApp2020_db%3bUser Id=Kroutis%40collectionapp2020dbserverpepehands%3bPassword=Zhfrdljnt123</Value>
+    </DestinationConnectionStrings>
+  </ItemGroup>
+  <ItemGroup>
+    <EFMigrations Include="CollectionApp.Models.ApplicationContext">
+      <Value>Data Source=tcp:collectionapp2020dbserverpepehands.database.windows.net,1433%3bInitial Catalog=CollectionApp2020_db%3bUser Id=Kroutis%40collectionapp2020dbserverpepehands%3bPassword=Zhfrdljnt123</Value>
+    </EFMigrations>
+    <EFMigrations Include="CollectionApp.Models.CollectionContext">
+      <Value>Data Source=tcp:collectionapp2020dbserverpepehands.database.windows.net,1433%3bInitial Catalog=CollectionApp2020_db%3bUser Id=Kroutis%40collectionapp2020dbserverpepehands%3bPassword=Zhfrdljnt123</Value>
+    </EFMigrations>
+  </ItemGroup>
+</Project>

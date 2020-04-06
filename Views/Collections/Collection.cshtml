@@ -11,32 +11,233 @@
         }
     }
 </script>
-<input type="checkbox" onClick="toggle(this)" /> Check all?
-<br />
-<form asp-controller="Collections" asp-action="FunctionsItem" method="post">
-    <input type="submit" name="Delete" value="Delete" />
-    <table class="table">
-        <tr><td>Check</td><td>Id</td><td>Item Name</td><td>Likes</td><td></td></tr>
-        @foreach (var item in Model.Items)
-        {
-            if (item.CollectionId == Model.CollectionId)
-            {
-    <tr>
-        <td><input type="checkbox" name="Id" value="@item.Id" /></td>
-        <td>@item.Id</td>
-        <td><a asp-action="Item" asp-controller="Collections" asp-route-id="@item.Id">@item.ItemName</a></td>
-        <td>@item.Likes</td>
-        <td><a asp-controller="Collections" asp-route-id="@item.Id" asp-action="EditItem">Edit Item</a></td>
-        <td>
-            @if (item.Image != null)
-            {
-                <img style='width:80px; height:60px;' src="data:image/jpeg;base64,@(Convert.ToBase64String(item.Image))" />
-            }
-        </td>
-
-    </tr>
-            }
+<head>
+    <script src="https://kit.fontawesome.com/1d70ce51d1.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
         }
-    </table>
-</form>
-    <a asp-controller="Collections" asp-route-id="@Model.CollectionId" asp-action="AddItem">Add Item</a>
+
+        #collection {
+            font-family: "Times New Roman", Times, sans-serif;
+            font-size: 17px;
+            border-collapse: collapse;
+            width: auto;
+            margin-left: 5px;
+        }
+
+            #collection td, #collection th {
+                border: 1px solid white;
+                padding: 8px;
+                text-align: center;
+                max-width: 300px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            #collection tr {
+                background-color: forestgreen;
+                color: white
+            }
+
+                #collection tr:hover {
+                    background-color: black;
+                    color: white;
+                }
+
+            #collection th {
+                font-family: "Times New Roman", Times, sans-serif;
+                font-size: 18px;
+                padding-top: 12px;
+                padding-bottom: 12px;
+                text-align: left;
+                background-color: darkgreen;
+                color: white;
+                text-align: center;
+            }
+
+        ol.buttons {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: none;
+        }
+
+        input {
+            font-family: "Times New Roman", Times, sans-serif;
+            font-size: 17px;
+            border: 1px solid black;
+            padding: 4px 7px;
+            margin: 4px 6px;
+            background-color: lightgrey;
+            cursor: pointer;
+        }
+
+            input.check {
+                vertical-align: top;
+                cursor: auto;
+            }
+
+            input.button:hover {
+                background-color: red;
+                color: white;
+            }
+
+        #collection a.td {
+            text-decoration: none;
+            color: white;
+        }
+
+        #collection a.th {
+            text-decoration: none;
+            color: white;
+        }
+
+            #collection a.th:visited {
+                color: white;
+            }
+
+            #collections a.th:visited {
+                color: white;
+            }
+
+            a.add {
+                font-family: "Times New Roman", Times, sans-serif;
+                font-size: 17px;
+                background-color: darkgreen;
+                color: white;
+                padding: 6px 12px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                float: left;
+                margin-right: 5px;
+                margin-top: 5px;
+                margin-left: 5px;
+                margin-bottom: 5px;
+                position: relative;
+            }
+
+                a.add:hover {
+                    background-color: forestgreen;
+                }
+
+        h2 {
+            font-family: "Times New Roman", Times, sans-serif;
+            font-size: 35px;
+            color: black;
+            margin-left: 5px;
+        }
+
+        p.description {
+            width: 500px;
+            height: auto;
+            font-family: "Times New Roman", Times, sans-serif;
+            font-size: 17px;
+            border: 1px solid black;
+            box-shadow: 1px 1px 1px grey;
+            word-wrap: break-word;
+            padding: 5px;
+            margin-left: 5px;
+            background-color: azure;
+            border-radius: 5px;
+        }
+
+        .column {
+            float: left;
+            padding: 10px;
+        }
+
+            .column.side {
+                width: 55%;
+            }
+
+            .column.middle {
+                width: 45%;
+            }
+
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        img {
+            height: auto;
+            width: 100%;
+            margin-left: 5px;
+        }
+    </style>
+
+</head>
+<body>
+    <div class="row">
+        <div class="column side">
+            <h2>@Model.collection.CollectionName</h2>
+            <p class="description">@Model.collection.Text</p>
+            <form asp-controller="Collections" asp-action="FunctionsItem" method="post">
+                @if (Model.Role_2 == "admin" || Model.Role_2 == "moderator" || User.Identity.Name == Model.UserName)
+                {
+                    <ol class="buttons">
+                        <li><input class="check" type="checkbox" onClick="toggle(this)" />Check/Uncheck all</li>
+                    </ol>
+                    <ol class="buttons">
+                        <li>
+                            <input class="button" type="submit" name="Delete" value="Delete" />
+                        </li>
+                    </ol>
+                    <ol class="buttons">
+                        <li>
+                            <a class="add" asp-controller="Collections" asp-action="Additem" asp-route-id="@Model.CollectionId">Add new item</a>
+                            <a class="add" asp-controller="Collections" asp-action="Edit" asp-route-id="@Model.CollectionId">Edit</a>
+                        </li>
+                    </ol>
+                }
+
+                <table id="collection">
+
+
+                    <tr>
+                        @if (Model.Role_2 == "admin" || Model.Role_2 == "moderator" || User.Identity.Name == Model.UserName)
+                        {
+                            <th>Check</th>
+                        }
+                        <th>Id<a class="th" asp-action="Collection" asp-controller="Collections" asp-route-id=@Model.CollectionId asp-route-sortOrder="@ViewBag.IdSort"><i class="fas fa-sort"></i></a></th>
+                        <th>Item name<a class="th" asp-action="Collection" asp-controller="Collections" asp-route-id=@Model.CollectionId asp-route-sortOrder="@ViewBag.NameSort"><i class="fas fa-sort"></i></a></th>
+                        <th>Description<a class="th" asp-action="Collection" asp-controller="Collections" asp-route-id=@Model.CollectionId asp-route-sortOrder="@ViewBag.TextSort"><i class="fas fa-sort"></i></a></th>
+                    </tr>
+                    @foreach (var item in Model.Items)
+                    {
+                        if (item.CollectionId == Model.CollectionId)
+                        {
+                            <tr>
+                                @if (Model.Role_2 == "admin" || Model.Role_2 == "moderator" || User.Identity.Name == Model.UserName)
+                                {
+                                    <td><input class="check" type="checkbox" name="Id" value="@item.Id" /></td>
+                                }
+                                <td>@item.Id</td>
+                                <td><a class="td" asp-controller="Collections" asp-action="item" asp-route-id="@item.Id">@item.ItemName</a></td>
+                                <td>@item.Text</td>
+
+
+                            </tr>
+                        }
+                    }
+                </table>
+
+                <input type="hidden" name="id_0" value=@Model.CollectionId />
+            </form>
+        </div>
+
+        <div class="column middle">
+
+            @if (Model.collection.Image != null)
+            {
+                <img src="data:image/jpeg;base64,@(Convert.ToBase64String(Model.collection.Image))" />
+            }
+
+        </div>
+    </div>
+</body>

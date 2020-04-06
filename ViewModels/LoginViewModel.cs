@@ -10,9 +10,9 @@ namespace CollectionApp.ViewModels
     public class LoginViewModel
     {
         [Required]
-        [Display(Name = "UserName")]
+        [Display(Name = "Username")]
         [DataType(DataType.Text)]
-        public string UserName { get; set; }
+        public string Username { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
@@ -22,7 +22,7 @@ namespace CollectionApp.ViewModels
 
         public bool RememberMe = false;
 
-        public string ReturnUrl { get; set; }
+        //public string ReturnUrl { get; set; }
         [Required]
         [DataType(DataType.Text)]
 

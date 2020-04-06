@@ -1,44 +1,135 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - CollectionApp</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" />
+    <style>
+        body {
+            background-image: url(/images/sky.jpg);
+            background-size: cover;
+        }
+
+        ul.layout {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #333;
+        }
+
+        li {
+            float: left;
+            font-family: "Times New Roman", Times, sans-serif;
+            font-size: 17px;
+            
+        }
+
+            li a, .dropbtn {
+                display: inline-block;
+                color: white;
+                text-align: center;
+                padding: 14px 16px;
+                text-decoration: none;
+                font-family: "Times New Roman", Times, sans-serif;
+                font-size: 17px;
+               
+            }
+
+                li a:hover, .dropdown:hover .dropbtn {
+                    background-color: red;
+                }
+
+            li.dropdown {
+                display: inline-block;
+            }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            
+            font-family: "Times New Roman", Times, sans-serif;
+            font-size: 17px;
+        }
+
+            .dropdown-content a {
+                color: black;
+                padding: 12px 16px;
+                text-decoration: none;
+                display: block;
+                text-align: left;
+                font-family: "Times New Roman", Times, sans-serif;
+                font-size: 17px;
+            }
+            .dropdown-content input {
+                width: 200px;
+                color: black;
+                padding: 12px 16px;
+                text-decoration: none;
+                display: block;
+                text-align: left;
+                background-color: #f9f9f9;
+                border: none;
+                font-family: "Times New Roman", Times, sans-serif;
+                font-size: 17px;
+                cursor:pointer;
+            }
+
+                .dropdown-content a:hover {
+                    background-color: #f1f1f1;
+                }
+
+            .dropdown-content input:hover {
+                background-color: #f1f1f1;
+            }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+    </style>
+
+    
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">CollectionApp</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+        <header>
+            
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <ul class="layout">
+                        <li><a asp-controller="Home" asp-action="Index">Home</a></li>
+                        <li class="dropdown">
+                            <a href="javascript:void(0)" class="dropbtn">@User.Identity.Name</a>
+                            <div class="dropdown-content">
+                                
+                                <a asp-controller="Collections" asp-action="" asp-route-username="@User.Identity.Name">My Collections</a>
+                                <form method="post" asp-controller="Account" asp-action="Logout">
+                                    <input type="submit" value="Logout" />
+                                </form>
+                            </div>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
+                        <li><a asp-controller="Users" asp-action="">Users</a></li>
                     </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
+                }
+                else
+                {
+                    <ul class="layout">
+                        <li><a asp-controller="Home" asp-action="Index">Home</a></li>
+                        <li><a asp-controller="Account" asp-action="Login">Login</a></li>
+                        <li><a asp-controller="Account" asp-action="Register">Register</a></li>
+                        <li><a asp-controller="Users" asp-action="">Users</a></li>
+                    </ul>
+                }
+            
+        </header>
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2020 - CollectionApp - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
+    <footer>
+        
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
