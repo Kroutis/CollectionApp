@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using CollectionApp.Models;
 using CollectionApp.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 
 namespace CollectionApp.Controllers
 {
@@ -23,27 +24,37 @@ namespace CollectionApp.Controllers
             _signInManager = signInManager;
         }
 
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(UserSort sortOrder = UserSort.NameAsc)
         {
-            View(_userManager.Users.ToList());
-            User user;
-            if (User.Identity.Name != null)
+            IQueryable<User> users = _userManager.Users;
+            ViewData["NameSort"] = sortOrder == UserSort.NameAsc ? UserSort.NameDesc : UserSort.NameAsc;
+            ViewData["StatusSort"] = sortOrder == UserSort.StatusAsc ? UserSort.StatusDesc : UserSort.StatusAsc;
+            ViewData["RoleSort"] = sortOrder == UserSort.RoleAsc ? UserSort.RoleDesc : UserSort.RoleAsc;
+            ViewData["BlockSort"] = sortOrder == UserSort.BlockAsc ? UserSort.BlockDesc : UserSort.BlockAsc;
+
+            users = sortOrder switch
             {
-                user = await _userManager.FindByNameAsync(User.Identity.Name);
-                if (user.Role=="admin" || user.Role=="moderator")
-                {
-                    return View();
-                }
-                else
-                {
-                    return RedirectToAction("", "Home");
-                }
-            }
-            else
+                UserSort.NameDesc => users.OrderByDescending(s => s.UserName),
+                UserSort.StatusAsc => users.OrderBy(s => s.Status),
+                UserSort.StatusDesc => users.OrderByDescending(s => s.Status),
+                UserSort.RoleAsc => users.OrderBy(s => s.Role),
+                UserSort.RoleDesc => users.OrderByDescending(s => s.Role),
+                UserSort.BlockAsc => users.OrderBy(s => s.Block),
+                UserSort.BlockDesc => users.OrderByDescending(s => s.Block),
+                _ => users.OrderBy(s => s.UserName),
+            };
+            string role = null;
+            if (User.Identity.Name!=null)
             {
-                return RedirectToAction("", "Home");
+                User user = await _userManager.FindByNameAsync(User.Identity.Name);
+                role = user.Role;
             }
-            
+            UsersViewModel model = new UsersViewModel
+            {
+                Users = await users.AsNoTracking().ToListAsync(),
+                Role = role,
+            };
+            return View(model); 
         }
 
 

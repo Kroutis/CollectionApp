@@ -15,5 +15,8 @@ namespace CollectionApp.Models
         public int Likes { get; set; }
         public byte[] Image { get; set; }
         public string UserName { get; set; }
+        [Required]
+
+        public string Text { get; set; }
     }
 }

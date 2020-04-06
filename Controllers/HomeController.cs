@@ -6,20 +6,30 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using CollectionApp.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using CollectionApp.ViewModels;
 
 namespace CollectionApp.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly CollectionContext db;
+        private readonly UserManager<User> _userManager;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, UserManager<User> userManager, CollectionContext context)
         {
             _logger = logger;
+            _userManager = userManager;
+            db = context;
         }
 
-        public IActionResult Index()
+        public async  Task<IActionResult> Index()
         {
+            
+
             return View();
         }
 

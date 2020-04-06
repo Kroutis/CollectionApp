@@ -43,12 +43,18 @@ namespace CollectionApp.Controllers
                 IQueryable<Collection> collections = db.Collections.Include(x=>x);
                 ViewData["IdSort"] = sortOrder == CollectionSort.IdAsc ? CollectionSort.IdDesc : CollectionSort.IdAsc;
                 ViewData["NameSort"] = sortOrder == CollectionSort.NameAsc ? CollectionSort.NameDesc : CollectionSort.NameAsc;
+                ViewData["ItemSort"] = sortOrder == CollectionSort.ItemCountAsc ? CollectionSort.ItemCountDesc : CollectionSort.ItemCountAsc;
+                ViewData["TextSort"] = sortOrder == CollectionSort.TextAsc ? CollectionSort.TextDesc : CollectionSort.TextAsc;
                 collections = sortOrder switch
                 {
                     CollectionSort.IdDesc => collections.OrderByDescending(s => s.Id),
                     CollectionSort.NameAsc=>collections.OrderBy(s=>s.CollectionName),
                     CollectionSort.NameDesc=>collections.OrderByDescending(s=>s.CollectionName),
-                    _=>collections.OrderBy(s=>s.Id),
+                    CollectionSort.ItemCountAsc => collections.OrderBy(s => s.ItemCount),
+                    CollectionSort.ItemCountDesc => collections.OrderByDescending(s => s.ItemCount),
+                    CollectionSort.TextAsc => collections.OrderBy(s => s.Text),
+                    CollectionSort.TextDesc => collections.OrderByDescending(s => s.Text),
+                    _ =>collections.OrderBy(s=>s.Id),
                 };
                 CollectionsControllerViewModel model = new CollectionsControllerViewModel
                 {
@@ -120,7 +126,7 @@ namespace CollectionApp.Controllers
             }
             else
             {
-                if (model.CollectionName != null)
+                if (ModelState.IsValid)
                 {
                     Collection collection = new Collection
                     {
@@ -128,6 +134,7 @@ namespace CollectionApp.Controllers
                         CollectionName = model.CollectionName,
                         CreationDate = model.CreationDate,
                         Likes = model.Likes,
+                        Text=model.Text,
                     };
                     if (model.Image != null)
                     {
@@ -173,6 +180,7 @@ namespace CollectionApp.Controllers
                                 CollectionName = collection.CollectionName,
                                 Image = collection.Image,
                                 NewImage = null,
+                                Text=collection.Text,
                             };
                             return View(model);
                         }
@@ -187,6 +195,7 @@ namespace CollectionApp.Controllers
                                 CollectionName = collection.CollectionName,
                                 Image = collection.Image,
                                 NewImage = null,
+                                Text=collection.Text,
                             };
                             return View(model);
                         }
@@ -204,7 +213,8 @@ namespace CollectionApp.Controllers
             }
             else
             {
-                Collection collection = await db.Collections.FindAsync(model.Id);
+                
+                    Collection collection = await db.Collections.FindAsync(model.Id);
                 if (model.NewImage != null)
                 {
                     byte[] imageData = null;
@@ -216,12 +226,13 @@ namespace CollectionApp.Controllers
                     db.Collections.Update(collection);
                     await db.SaveChangesAsync();
                 }
-                if (model.CollectionName != null)
+                if (ModelState.IsValid)
                 {
                     collection.CollectionName = model.CollectionName;
+                    collection.Text = model.Text;
                     db.Collections.Update(collection);
                     await db.SaveChangesAsync();
-                    return RedirectToAction("Index", "Collections", new { userName = collection.UserName });
+                    return RedirectToAction("Collection", "Collections", new { Id = collection.Id });
                 }
                 else
                 {
@@ -233,22 +244,39 @@ namespace CollectionApp.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult> Functions(List<int> Id, string Delete)
+        public async Task<ActionResult> Functions(List<int> Id, string Delete, string username)
         {
-            Collection collection;
-            Collection collection_2=await db.Collections.FindAsync(Id[0]);
-            User currentuser = null;
-            if (User.Identity.Name!=null)
+            if (Id != null)
             {
-                currentuser = await _userManager.FindByNameAsync(User.Identity.Name);
-            }
-            string username = collection_2.UserName;
-            User user = await _userManager.FindByNameAsync(username);
-            if (!string.IsNullOrEmpty(Delete) && currentuser!=null)
-            {
-                if (user.Role == "user")
+                Collection collection;
+                
+                User currentuser = null;
+                if (User.Identity.Name != null)
                 {
-                    if (currentuser.UserName == username || currentuser.Role == "admin" || currentuser.Role == "moderator")
+                    currentuser = await _userManager.FindByNameAsync(User.Identity.Name);
+                }
+                
+                User user = await _userManager.FindByNameAsync(username);
+                if (!string.IsNullOrEmpty(Delete) && currentuser != null)
+                {
+                    if (user.Role == "user")
+                    {
+                        if (currentuser.UserName == username || currentuser.Role == "admin" || currentuser.Role == "moderator")
+                        {
+                            for (int i = 0; i < Id.Count; i++)
+                            {
+                                collection = await db.Collections.FindAsync(Id[i]);
+                                if (collection != null)
+                                {
+                                    db.Collections.Remove(collection);
+                                    await db.SaveChangesAsync();
+                                }
+
+                            }
+                        }
+                    }
+
+                    else if (currentuser.UserName == username || currentuser.Role == "admin")
                     {
                         for (int i = 0; i < Id.Count; i++)
                         {
@@ -261,37 +289,52 @@ namespace CollectionApp.Controllers
 
                         }
                     }
+
+
                 }
-
-                else if (currentuser.UserName == username || currentuser.Role == "admin")
-                {
-                    for (int i = 0; i < Id.Count; i++)
-                    {
-                        collection = await db.Collections.FindAsync(Id[i]);
-                        if (collection != null)
-                        {
-                            db.Collections.Remove(collection);
-                            await db.SaveChangesAsync();
-                        }
-
-                    }
-                }
-
-
+               
             }
-            return RedirectToAction("Index", "Collections", new{userName=username});
+            return RedirectToAction("Index", "Collections", new { userName = username });
         }
         
 
-        public async Task<IActionResult> Collection (int Id)
+        public async Task<IActionResult> Collection (int Id, ItemSort sortOrder = ItemSort.IdAsc)
         {
+            User user_2;
+            string role = null;
+            string username = null;
             Collection collection = await db.Collections.FindAsync(Id);
+            username = collection.UserName;
+            if (User.Identity.Name!=null)
+            {
+                user_2 = await _userManager.FindByNameAsync(User.Identity.Name);
+                role = user_2.Role;
+            }
             if (collection!=null)
             {
+
+                IQueryable<Item> items = db.Items.Include(x => x);
+                ViewData["IdSort"] = sortOrder == ItemSort.IdAsc ? ItemSort.IdDesc : ItemSort.IdAsc;
+                ViewData["NameSort"] = sortOrder == ItemSort.NameAsc ? ItemSort.NameDesc : ItemSort.NameAsc;
+                ViewData["TextSort"] = sortOrder == ItemSort.TextAsc ? ItemSort.TextDesc : ItemSort.TextAsc;
+
+                items = sortOrder switch
+                {
+                    ItemSort.IdDesc => items.OrderByDescending(s => s.Id),
+                    ItemSort.NameAsc => items.OrderBy(s => s.ItemName),
+                    ItemSort.NameDesc => items.OrderByDescending(s => s.ItemName),
+                    ItemSort.TextAsc => items.OrderBy(s => s.Text),
+                    ItemSort.TextDesc => items.OrderByDescending(s => s.Text),
+                    _ => items.OrderBy(s => s.Id),
+                };
+
                 CollectionViewModel model = new CollectionViewModel
                 {
+                    collection=collection,
                     CollectionId = collection.Id,
-                    Items = await db.Items.ToListAsync(),
+                    Items = await items.AsNoTracking().ToListAsync(),
+                    Role_2 =role,
+                    UserName=username,
                 };
                 return View(model);
             }
@@ -356,7 +399,7 @@ namespace CollectionApp.Controllers
             }
             else
             {
-                if (model.ItemName != null)
+                if (ModelState.IsValid)
                 {
                     Item item = new Item
                     {
@@ -364,6 +407,7 @@ namespace CollectionApp.Controllers
                         CollectionId = model.CollectionId,
                         ItemName = model.ItemName,
                         Likes = model.Likes,
+                        Text=model.Text,
                     };
                     if (model.Image != null)
                     {
@@ -413,6 +457,7 @@ namespace CollectionApp.Controllers
                             ItemName = item.ItemName,
                             Image = item.Image,
                             NewImage = null,
+                            Text=item.Text,
                         };
                         return View(model);
                     }
@@ -428,6 +473,7 @@ namespace CollectionApp.Controllers
                             ItemName = item.ItemName,
                             Image = item.Image,
                             NewImage = null,
+                            Text=item.Text,
                         };
                         return View(model);
                     }
@@ -460,12 +506,13 @@ namespace CollectionApp.Controllers
                 }
 
 
-                if (model.ItemName != null)
+                if (ModelState.IsValid)
                 {
                     item.ItemName = model.ItemName;
+                    item.Text = model.Text;
                     db.Items.Update(item);
                     await db.SaveChangesAsync();
-                    return RedirectToAction("Collection", "Collections", new { Id = item.CollectionId });
+                    return RedirectToAction("Item", "Collections", new { Id = item.Id });
                 }
                 else
                 {
@@ -477,25 +524,42 @@ namespace CollectionApp.Controllers
 
 
 
-        public async Task<ActionResult> FunctionsItem(List<int> Id, string Delete)
+        public async Task<ActionResult> FunctionsItem(List<int> Id, string Delete, int id_0)
         {
-            Item item;
-            User currentuser = null;
-            User user;
-            if (User.Identity.Name != null)
+            if (Id != null)
             {
-                currentuser = await _userManager.FindByNameAsync(User.Identity.Name);
-            }
-            Item item_2 = await db.Items.FindAsync(Id[0]);
-            int Id_2 = item_2.CollectionId;
-            Collection collection = await db.Collections.FindAsync(Id_2);
-            string username = item_2.UserName;
-            user = await _userManager.FindByNameAsync(username);
-            if (!string.IsNullOrEmpty(Delete) && currentuser != null)
-            {
-                if (user.Role == "user")
+                Item item;
+                User currentuser = null;
+                User user;
+                if (User.Identity.Name != null)
                 {
-                    if (currentuser.UserName == username || currentuser.Role == "admin" || currentuser.Role == "moderator")
+                    currentuser = await _userManager.FindByNameAsync(User.Identity.Name);
+                }
+
+                Collection collection = await db.Collections.FindAsync(id_0);
+                string username = collection.UserName;
+                user = await _userManager.FindByNameAsync(username);
+                if (!string.IsNullOrEmpty(Delete) && currentuser != null)
+                {
+                    if (user.Role == "user")
+                    {
+                        if (currentuser.UserName == username || currentuser.Role == "admin" || currentuser.Role == "moderator")
+                        {
+                            for (int i = 0; i < Id.Count; i++)
+                            {
+                                item = await db.Items.FindAsync(Id[i]);
+                                if (item != null)
+                                {
+                                    db.Items.Remove(item);
+                                    collection.ItemCount--;
+                                    await db.SaveChangesAsync();
+                                }
+
+                            }
+                        }
+                    }
+
+                    else if (currentuser.UserName == username || currentuser.Role == "admin")
                     {
                         for (int i = 0; i < Id.Count; i++)
                         {
@@ -509,35 +573,28 @@ namespace CollectionApp.Controllers
 
                         }
                     }
+
+
                 }
-
-                else if (currentuser.UserName == username || currentuser.Role == "admin")
-                {
-                    for (int i = 0; i < Id.Count; i++)
-                    {
-                        item = await db.Items.FindAsync(Id[i]);
-                        if (item != null)
-                        {
-                            db.Items.Remove(item);
-                            collection.ItemCount--;
-                            await db.SaveChangesAsync();
-                        }
-
-                    }
-                }
-
-
             }
-            return RedirectToAction("Collection", "Collections", new { Id = Id_2 });
+            return RedirectToAction("Collection", "Collections", new { Id = id_0 });
         }
         public async Task<IActionResult> Item (int Id)
         {
-
+            User currentuser = null;
+            string role = null;
+            if (User.Identity.Name!=null)
+            {
+                currentuser = await _userManager.FindByNameAsync(User.Identity.Name);
+                role = currentuser.Role;
+            }
             Item item = await db.Items.FindAsync(Id);
             if (item != null)
             {
                 ItemViewModel model = new ItemViewModel
                 {
+                    Role_2=role,
+                    UserName = item.UserName,
                     Item=item,
                     ItemComments = await db.ItemComments.ToListAsync(),
                 };
@@ -551,15 +608,19 @@ namespace CollectionApp.Controllers
            
             if (!string.IsNullOrEmpty(CommentButton) && User.Identity.Name != null)
             {
-                ItemComment comment = new ItemComment
+                if (ModelState.IsValid)
                 {
-                 Text = model.Comment.Text,
-                 ItemId = Id,
-                 UserName = User.Identity.Name,
-                };
-                 db.ItemComments.Add(comment);
-                await db.SaveChangesAsync();
-                return RedirectToAction("Item", "Collections", new { Id = Id});
+                    ItemComment comment = new ItemComment
+                    {
+                        Text = model.Text,
+                        ItemId = Id,
+                        UserName = User.Identity.Name,
+                    };
+                    db.ItemComments.Add(comment);
+                    await db.SaveChangesAsync();
+                }
+                    return RedirectToAction("Item", "Collections", new { Id = Id });
+               
             }
             else
             {

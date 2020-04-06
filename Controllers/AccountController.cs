@@ -7,6 +7,7 @@ using CollectionApp.ViewModels;
 using CollectionApp.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Web;
 
 namespace CollectionApp.Controllers
 {
@@ -24,7 +25,14 @@ namespace CollectionApp.Controllers
         [HttpGet]
         public IActionResult Register()
         {
-            return View();
+            if (User.Identity.Name != null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                return View();
+            }
         }
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel model)
@@ -63,9 +71,16 @@ namespace CollectionApp.Controllers
         }
 
         [HttpGet]
-        public IActionResult Login(string returnUrl = null)
+        public IActionResult Login()
         {
-            return View(new LoginViewModel { ReturnUrl = returnUrl });
+            if (User.Identity.Name != null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                return View(new LoginViewModel { });
+            }
         }
 
         [HttpPost]
@@ -75,10 +90,10 @@ namespace CollectionApp.Controllers
             if (ModelState.IsValid)
             {
                 var result =
-                    await _signInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, false);
+                    await _signInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberMe, false);
                 if (result.Succeeded)
                 {
-                    User user = await _userManager.FindByNameAsync(model.UserName);
+                    User user = await _userManager.FindByNameAsync(model.Username);
 
 
 
@@ -96,18 +111,18 @@ namespace CollectionApp.Controllers
 
                     }
 
-                    if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
+                    /*if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
                     {
                         return Redirect(model.ReturnUrl);
                     }
-                    else
+                    else*/
                     {
                         return RedirectToAction("Index", "Home");
                     }
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Неправильный логин и (или) пароль");
+                    ModelState.AddModelError("", "Wrong login or password");
                 }
             }
             return View(model);

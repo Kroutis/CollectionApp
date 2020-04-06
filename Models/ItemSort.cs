@@ -5,14 +5,12 @@ using System.Threading.Tasks;
 
 namespace CollectionApp.Models
 {
-    public enum CollectionSort
+    public enum ItemSort
     {
         IdAsc,
         IdDesc,
         NameAsc,
         NameDesc,
-        ItemCountAsc,
-        ItemCountDesc,
         TextAsc,
         TextDesc,
     }
