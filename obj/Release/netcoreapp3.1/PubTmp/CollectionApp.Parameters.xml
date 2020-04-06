@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="IIS Web Application Name" description="" value="CollectionApp2020" tags="IisApp">
+    <parameterEntry kind="ProviderPath" scope="IisApp" match="^C:\\Users\\eugen\\source\\repos\\CollectionApp\\obj\\Release\\netcoreapp3\.1\\PubTmp\\Out\\$" />
+  </parameter>
+  <parameter name="CollectionApp.Models.ApplicationContext" description="" value="Data Source=tcp:collectionapp2020dbservertry.database.windows.net,1433;Initial Catalog=CollectionApp2020_db;User Id=Kroutis@collectionapp2020dbservertry;Password=Zhfrdljnt123" tags="dbfullsql">
+    <parameterEntry kind="ProviderPath" scope="dbfullsql" match="^C:\\Users\\eugen\\source\\repos\\CollectionApp\\obj\\Release\\netcoreapp3\.1\\PubTmp\\EFSQLScripts\\CollectionApp\.Models\.ApplicationContext\.sql$" />
+  </parameter>
+  <parameter name="CollectionApp.Models.CollectionContext" description="" value="Data Source=tcp:collectionapp2020dbservertry.database.windows.net,1433;Initial Catalog=CollectionApp2020_db;User Id=Kroutis@collectionapp2020dbservertry;Password=Zhfrdljnt123" tags="dbfullsql">
+    <parameterEntry kind="ProviderPath" scope="dbfullsql" match="^C:\\Users\\eugen\\source\\repos\\CollectionApp\\obj\\Release\\netcoreapp3\.1\\PubTmp\\EFSQLScripts\\CollectionApp\.Models\.CollectionContext\.sql$" />
+  </parameter>
+</parameters>

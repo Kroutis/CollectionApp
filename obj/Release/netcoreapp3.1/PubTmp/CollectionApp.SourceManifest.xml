@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<sitemanifest>
+  <IisApp path="C:\Users\eugen\source\repos\CollectionApp\obj\Release\netcoreapp3.1\PubTmp\Out\" />
+  <dbfullsql path="C:\Users\eugen\source\repos\CollectionApp\obj\Release\netcoreapp3.1\PubTmp\EFSQLScripts\CollectionApp.Models.ApplicationContext.sql" />
+  <dbfullsql path="C:\Users\eugen\source\repos\CollectionApp\obj\Release\netcoreapp3.1\PubTmp\EFSQLScripts\CollectionApp.Models.CollectionContext.sql" />
+</sitemanifest>
